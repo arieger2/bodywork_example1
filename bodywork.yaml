@@ -23,10 +23,10 @@ stages:
       - joblib==0.17.0
       - numpy==1.19.4
       - scikit-learn==0.23.2
-    cpu_request: 0.25
+    cpu_request: 0.75
     memory_request_mb: 100
     service:
-      max_startup_time_seconds: 30
+      max_startup_time_seconds: 60
       replicas: 2
       port: 5000
       ingress: true
