@@ -2,7 +2,7 @@ version: "1.0"
 project:
   name: bodywork-ml-pipeline-project
   docker_image: bodyworkml/bodywork-core:latest
-  DAG: stage_1_train_model 
+  DAG: stage_1_train_model >> stage_2_scoring_service
 stages:
   stage_1_train_model:
     executable_module_path: pipeline/train_model.py
@@ -12,9 +12,23 @@ stages:
       - pandas==1.1.4
       - scikit-learn==0.23.2
     cpu_request: 2
-    memory_request_mb: 100
+    memory_request_mb: 200
     batch:
-      max_completion_time_seconds: 60
+      max_completion_time_seconds: 260
       retries: 2
+  stage_2_scoring_service:
+    executable_module_path: pipeline/serve_model.py
+    requirements:
+      - Flask==1.1.2
+      - joblib==0.17.0
+      - numpy==1.19.4
+      - scikit-learn==0.23.2
+    cpu_request: 0.75
+    memory_request_mb: 100
+    service:
+      max_startup_time_seconds: 60
+      replicas: 2
+      port: 5000
+      ingress: true
 logging:
   log_level: DEBUG
