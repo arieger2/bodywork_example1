@@ -8,9 +8,10 @@ This module defines what will happen in 'stage-1-train-model':
 """
 from datetime import datetime
 from urllib.request import urlopen
-from typing import Tuple
+from typing import tuple
+from minio import Minio
+from minio.error import S3Error
 
-import boto3 as aws
 import numpy as np
 import pandas as pd
 from joblib import dump
@@ -100,7 +101,13 @@ def persist_model(model: BaseEstimator) -> None:
     """Put trained model into cloud object storage."""
     dump(model, TRAINED_MODEL_FILENAME)
     try:
-        s3_client = aws.client('s3')
+    	  s3_client = Minio(
+          "minio.ml-pipeline.svc.cluster.local",
+          access_key="alexanderrieger",
+          secret_key="zuf+alexanderrieger",
+        ) 
+    	
+    	
         s3_client.upload_file(
             TRAINED_MODEL_FILENAME,
             TRAINED_MODEL_AWS_BUCKET,
