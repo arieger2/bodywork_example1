@@ -11,10 +11,10 @@ stages:
       - joblib==0.17.0
       - pandas==1.1.4
       - scikit-learn==0.23.2
-    cpu_request: 2
+    cpu_request: 3
     memory_request_mb: 200
     batch:
-      max_completion_time_seconds: 260
+      max_completion_time_seconds: 60
       retries: 2
   stage_2_scoring_service:
     executable_module_path: pipeline/serve_model.py
@@ -23,7 +23,7 @@ stages:
       - joblib==0.17.0
       - numpy==1.19.4
       - scikit-learn==0.23.2
-    cpu_request: 0.75
+    cpu_request: 2
     memory_request_mb: 100
     service:
       max_startup_time_seconds: 60
